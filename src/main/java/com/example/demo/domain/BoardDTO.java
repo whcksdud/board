@@ -1,7 +1,10 @@
 package com.example.demo.domain;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "BOARD")
@@ -64,5 +67,12 @@ public class BoardDTO {
                 ", pw='" + pw + '\'' +
                 ", context='" + context + '\'' +
                 '}';
+    }
+
+    public void setNum(long num) {
+        this.num = num;
+    }
+    public Long getNum() {
+        return num;
     }
 }

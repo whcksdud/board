@@ -2,10 +2,7 @@ package com.example.demo.dao;
 
 import com.example.demo.domain.BoardDTO;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Connection;
+import java.sql.*;
 
 public class BoardDAO {
     private Connection conn;

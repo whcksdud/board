@@ -34,14 +34,7 @@
 </head>
 
 <body>
-    <%
-        try {
-            Class.forName("org.h2.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
-            Statement stmt = conn.createStatement();
-            String query = "SELECT * FROM BOARD"; // 데이터를 가져올 쿼리문
-            ResultSet rs = stmt.executeQuery(query);
-    %>
+
     <div class="container-xxl bg-white p-0">
         <!-- Spinner Start -->
         <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -94,49 +87,7 @@
                     <!-- Sample Posts -->
                   <div class="container mt-5">
                       <div class="container">
-                          <%
-                          String searchKeyword = request.getParameter("searchKeyword");
-                          if (searchKeyword != null) {
-                              searchKeyword = searchKeyword.trim();
-                              if (!searchKeyword.isEmpty()) {
-                                  String searchQuery = "SELECT * FROM BOARD WHERE title LIKE ?";
-                                  try (PreparedStatement pstmt = conn.prepareStatement(searchQuery)) {
-                                      pstmt.setString(1, "%" + searchKeyword + "%");
-                                      ResultSet searchResult = pstmt.executeQuery();
-                                      if (searchResult.next()) { // 검색 결과가 있을 때만 테이블 표시
-                          %>
-                          <h4 class="mt-4">검색 결과</h4>
-                          <table class="table">
-                              <thead>
-                                  <tr>
-                                      <th scope="col">번호</th>
-                                      <th scope="col">제목</th>
-                                      <th scope="col">작성자</th>
-                                      <th scope="col">작성일</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <% do { %>
-                                  <tr>
-                                      <th scope="row"><%= searchResult.getString("num") %></th>
-                                      <td><a href="/post?num=<%= searchResult.getString("num") %>"><%= searchResult.getString("title") %></a></td>
-                                      <td><%= searchResult.getString("id") %></td>
-                                      <td><%= searchResult.getString("writer_date") %></td>
-                                  </tr>
-                                  <% } while (searchResult.next()); %>
-                              </tbody>
-                          </table>
-                          <%
-                                      } else {
-                                          out.println("<h3>검색 결과가 없습니다.</h3>");
-                                      }
-                                      searchResult.close();
-                                  } catch (SQLException e) {
-                                      out.println("검색 도중 오류가 발생하였습니다: " + e.getMessage());
-                                  }
-                              }
-                          }
-                          %>
+
 
                           <table class="table">
                               <thead>
@@ -148,21 +99,7 @@
                                   </tr>
                               </thead>
                               <tbody>
-                                  <% while (rs.next()) { %>
-                                  <tr>
-                                      <th scope="row"><%= rs.getString("num") %></th>
-                                      <td><a href="/post?num=<%= rs.getString("num") %>"><%= rs.getString("title") %></a></td>
-                                      <td><%= rs.getString("id") %></td>
-                                      <td><%= rs.getString("writer_date") %></td>
-                                  </tr>
-                                  <% }
-                                  rs.close();
-                                  stmt.close();
-                                  conn.close();
-                                  } catch (Exception e) {
-                                      out.println("데이터베이스 조회 도중 오류가 발생하였습니다: " + e.getMessage());
-                                  }
-                                  %>
+
                               </tbody>
                           </table>
                           <div class="text-center">
@@ -173,17 +110,7 @@
                       <br>
                       <br>
                       <br>
-                      <form method="GET" action="feature">
-                                               <div class="input-group mb-1 d-flex justify-content-center">
-                                                   <div class="col-md-6">
-                                                       <input type="text" class="form-control" placeholder="검색어를 입력하세요" name="searchKeyword">
-                                                   </div>
-                                                   <div class="col-md-0">
-                                                       <button class="btn btn-outline-secondary btn-block" type="submit">검색</button>
-                                                   </div>
-                                               </div>
 
-                                            </form>
                   </div>
 
             </div>

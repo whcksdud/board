@@ -31,10 +31,30 @@ public class MyController {
 
         return "post";
     }
+    @GetMapping("/votepost")
+    public String votepost(Model model) {
+
+        return "votepost";
+    }
+    @GetMapping("/voteadd")
+    public String voteadd(Model model) {
+
+        return "voteadd";
+    }
+    @GetMapping("/votefeature")
+    public String votefeature(Model model) {
+
+        return "votefeature";
+    }
     @GetMapping("/404")
     public String error(Model model) {
 
         return "404";
+    }
+    @GetMapping("/game")
+    public String game(Model model) {
+
+        return "game";
     }
 
 }

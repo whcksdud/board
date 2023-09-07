@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>BizConsult - Consulting HTML Template</title>
+    <title>스프링부트 게시판 플젝입니다</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -91,9 +91,26 @@
                             <div class="form-group row">
                                 <label for="content" class="col-sm-2 col-form-label">내용</label>
                                 <div class="col-sm-10">
-                                    <textarea cols="100" rows="5" name="context" class="form-control"></textarea>
+                                    <input cols="100" rows="5" name="context" class="form-control" required></input>
                                 </div>
+
+
                             </div>
+                            <br>
+                               <div class="form-group row">
+                                                                            <div class="col-sm-10 offset-sm-2">
+                                                                                <!-- 투표 버튼 -->
+                                                                                <button class="btn btn-outline-primary vote-button" data-postid="게시글ID" data-vote="yes">
+                                                                                    <i class="bi bi-check-circle"></i> 투표
+                                                                                </button>
+
+                                                                                <!-- 사진 아이콘 버튼 -->
+                                                                                <button class="btn btn-outline-primary ml-2">
+                                                                                    <i class="bi bi-camera"></i> 사진 업로드
+                                                                                </button>
+
+                                                                            </div>
+                                                                        </div>
                             <br>
                             <div class="form-group row">
                                 <div class="col-sm-10 offset-sm-2">

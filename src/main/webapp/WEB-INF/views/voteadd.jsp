@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*, java.io.*" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,6 +34,7 @@
 </head>
 
 <body>
+
     <div class="container-xxl bg-white p-0">
         <!-- Spinner Start -->
         <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -48,51 +50,61 @@
             <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
                 <a href="/home" class="navbar-brand p-0">
                     <h1 class="m-0">게시판 플젝</h1>
-                    <!-- <img src="img/logo.png" alt="Logo"> -->
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                    <span class="fa fa-bars"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <div class="navbar-nav ms-auto py-0">
-                        <a href="/home" class="nav-item nav-link active">홈</a>
-                       
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">페이지</a>
-                            <div class="dropdown-menu m-0">
-                                <a href="feature" class="dropdown-item">게시판</a>
-                                <a href="votefeature" class="dropdown-item">투표</a>
-                                <a href="game" class="dropdown-item">게임</a>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
             </nav>
-
-            <div class="container-xxl bg-primary hero-header">
-                <div class="container">
-                    <div class="row g-5 align-items-center">
-                        <div class="col-lg-6 text-center text-lg-start">
-                            <h1 class="text-white mb-4 animated zoomIn">🎨 타이틀 입니다</h1>
-                            <p class="text-white pb-3 animated zoomIn">설명 입니다</p>
-                            
-                        </div>
-                        <div class="col-lg-6 text-center text-lg-start">
-                            <img class="img-fluid animated zoomIn" src="img/hero.png" alt="">
-                        </div>
-                    </div>
-                </div>
+            <div class="container-xxl bg-primary page-header">
             </div>
         </div>
         <!-- Navbar & Hero End -->
+        <!-- Quote Start -->
+        <div class="container-xxl py-6">
+            <div class="container">
+                <div class="mx-auto text-center wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                    <h2 class="mb-5">투표 만들기</h2>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-lg-7 wow fadeInUp" data-wow-delay="0.3s">
+                        <form method="post" action="CreateVoteServlet" class="needs-validation" novalidate>
+                            <div class="form-group">
+                                <label for="voteTitle">투표 제목 *</label>
+                                <input type="text" name="voteTitle" class="form-control" required>
+                            </div>
 
-        <div class="container-fluid bg-dark text-light footer pt-5 wow fadeIn" data-wow-delay="0.1s" style="margin-top: 6rem;">
-            <div class="container py-2">                
-                <p><i class="bi bi-shield-lock-fill"></i> copyright chanyougjo</p>
+                            <div class="form-group">
+                                <label for="voteOptions">투표 옵션 *</label>
+                                <div id="voteOptions">
+                                    <input type="text" name="option1" class="form-control" required>
+                                    <input type="text" name="option2" class="form-control mt-2" required>
+                                    <!-- 여기에 더 많은 옵션을 추가할 수 있음 -->
+                                </div>
+                                <button type="button" class="btn btn-outline-primary" onclick="addOption()">옵션 추가</button>
+                                 <button onClick="location.href='votefeature'" type="submit" class="btn btn-primary">투표 만들기</button>
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
             </div>
-            
         </div>
+        <!-- Quote End -->
+        <script>
+            var optionCounter = 3; // 다음에 추가될 옵션 인덱스
+
+            function addOption() {
+                var newOptionInput = document.createElement("input");
+                newOptionInput.type = "text";
+                newOptionInput.name = "option" + optionCounter;
+                newOptionInput.className = "form-control mt-2";
+                newOptionInput.required = true;
+
+                var voteOptionsDiv = document.getElementById("voteOptions");
+                voteOptionsDiv.appendChild(newOptionInput);
+
+                optionCounter++;
+            }
+        </script>
+
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>

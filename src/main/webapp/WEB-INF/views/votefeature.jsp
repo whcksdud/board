@@ -16,7 +16,7 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -39,7 +39,7 @@
             Class.forName("org.h2.Driver");
             Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
             Statement stmt = conn.createStatement();
-            String query = "SELECT * FROM BOARD"; // 데이터를 가져올 쿼리문
+            String query = "SELECT * FROM VOTE "; // 데이터를 가져올 쿼리문
             ResultSet rs = stmt.executeQuery(query);
     %>
     <div class="container-xxl bg-white p-0">
@@ -68,8 +68,8 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">페이지</a>
                             <div class="dropdown-menu m-0">
-                                <a href="feature" class="dropdown-item active">게시판</a>
-                                <a href="votefeature" class="dropdown-item">투표</a>
+                                <a href="feature" class="dropdown-item">게시판</a>
+                                <a href="votefeature" class="dropdown-item active">투표</a>
                                                                 <a href="game" class="dropdown-item">게임</a>
 
                             </div>
@@ -80,10 +80,10 @@
 
             <div class="container-xxl bg-primary page-header">
                 <div class="container text-center">
-                    <h1 class="text-white animated zoomIn mb-3">게시판</h1>     
+                    <h1 class="text-white animated zoomIn mb-3">게시판</h1>
                 </div>
             </div>
-            
+
         </div>
         <!-- Navbar & Hero End -->
 
@@ -94,67 +94,22 @@
                     <!-- Sample Posts -->
                   <div class="container mt-5">
                       <div class="container">
-                          <%
-                          String searchKeyword = request.getParameter("searchKeyword");
-                          if (searchKeyword != null) {
-                              searchKeyword = searchKeyword.trim();
-                              if (!searchKeyword.isEmpty()) {
-                                  String searchQuery = "SELECT * FROM BOARD WHERE title LIKE ?";
-                                  try (PreparedStatement pstmt = conn.prepareStatement(searchQuery)) {
-                                      pstmt.setString(1, "%" + searchKeyword + "%");
-                                      ResultSet searchResult = pstmt.executeQuery();
-                                      if (searchResult.next()) { // 검색 결과가 있을 때만 테이블 표시
-                          %>
-                          <h4 class="mt-4">검색 결과</h4>
-                          <table class="table">
-                              <thead>
-                                  <tr>
-                                      <th scope="col">번호</th>
-                                      <th scope="col">제목</th>
-                                      <th scope="col">작성자</th>
-                                      <th scope="col">작성일</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <% do { %>
-                                  <tr>
-                                      <th scope="row"><%= searchResult.getString("num") %></th>
-                                      <td><a href="/post?num=<%= searchResult.getString("num") %>"><%= searchResult.getString("title") %></a></td>
-                                      <td><%= searchResult.getString("id") %></td>
-                                      <td><%= searchResult.getString("writer_date") %></td>
-                                  </tr>
-                                  <% } while (searchResult.next()); %>
-                              </tbody>
-                          </table>
-                          <%
-                                      } else {
-                                          out.println("<h3>검색 결과가 없습니다.</h3>");
-                                      }
-                                      searchResult.close();
-                                  } catch (SQLException e) {
-                                      out.println("검색 도중 오류가 발생하였습니다: " + e.getMessage());
-                                  }
-                              }
-                          }
-                          %>
+
 
                           <table class="table">
                               <thead>
                                   <tr>
                                       <th scope="col">번호</th>
                                       <th scope="col">제목</th>
-                                      <th scope="col">작성자</th>
-                                      <th scope="col">작성일</th>
                                   </tr>
                               </thead>
                               <tbody>
                                   <% while (rs.next()) { %>
                                   <tr>
-                                      <th scope="row"><%= rs.getString("num") %></th>
-                                      <td><a href="/post?num=<%= rs.getString("num") %>"><%= rs.getString("title") %></a></td>
-                                      <td><%= rs.getString("id") %></td>
-                                      <td><%= rs.getString("writer_date") %></td>
+                                      <th scope="row"><%= rs.getString("ID") %></th>
+                                      <td><a href="/votepost?ID=<%= rs.getString("ID") %>"><%= rs.getString("TITLE") %></a></td>
                                   </tr>
+
                                   <% }
                                   rs.close();
                                   stmt.close();
@@ -165,38 +120,25 @@
                                   %>
                               </tbody>
                           </table>
-                          <div class="text-center">
-                              <button type="button" class="btn btn-primary" onClick="location.href='add'">글 작성</button>
-                          </div>
-                      </div>
-                      <br>
-                      <br>
-                      <br>
-                      <br>
-                      <form method="GET" action="feature">
-                                               <div class="input-group mb-1 d-flex justify-content-center">
-                                                   <div class="col-md-6">
-                                                       <input type="text" class="form-control" placeholder="검색어를 입력하세요" name="searchKeyword">
-                                                   </div>
-                                                   <div class="col-md-0">
-                                                       <button class="btn btn-outline-secondary btn-block" type="submit">검색</button>
-                                                   </div>
-                                               </div>
 
-                                            </form>
+                          <button type="button" class="btn btn-primary" onClick="location.href='voteadd'">
+                            <i class="bi bi-check-circle"></i> 투표생성
+                          </button>
+                      </div>
+
                   </div>
 
             </div>
         </div>
         <!-- Features End -->
-        
+
 
         <!-- Footer Start -->
         <div class="container-fluid bg-dark text-light footer pt-5 wow fadeIn" data-wow-delay="0.1s" style="margin-top: 6rem;">
-            <div class="container py-2">                
+            <div class="container py-2">
                 <p><i class="bi bi-shield-lock-fill"></i> copyright chanyougjo</p>
             </div>
-            
+
         </div>
         </div>
         <!-- Footer End -->
