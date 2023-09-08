@@ -77,8 +77,14 @@
                                     <input type="text" name="option2" class="form-control mt-2" required>
                                     <!-- 여기에 더 많은 옵션을 추가할 수 있음 -->
                                 </div>
+                                <br>
+                                <br>
                                 <button type="button" class="btn btn-outline-primary" onclick="addOption()">옵션 추가</button>
-                                 <button onClick="location.href='votefeature'" type="submit" class="btn btn-primary">투표 만들기</button>
+                                <br>
+                                <br>
+                                 <div class="text-center">
+                                                               <button onClick="location.href='votefeature'" type="submit" class="btn btn-primary">투표 만들기</button>
+                                                           </div>
                             </div>
 
 

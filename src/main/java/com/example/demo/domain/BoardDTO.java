@@ -19,7 +19,53 @@ public class BoardDTO {
     private String id;
     private String pw;
     private String context;
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean isNotice;
 
+    /** 원글 번호 **/
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer originNo;
+    /** 원글(답글포함)에 대한 순서 **/
+    @Column(nullable = true)
+    private Integer groupOrd;
+    /** 답글 계층 **/
+    @Column(nullable = true)
+    private Integer groupLayer;
+
+    public void setNum(Long num) {
+        this.num = num;
+    }
+
+    public Integer getOriginNo() {
+        return originNo;
+    }
+
+    public void setOriginNo(Integer originNo) {
+        this.originNo = originNo;
+    }
+
+    public Integer getGroupOrd() {
+        return groupOrd;
+    }
+
+    public void setGroupOrd(Integer groupOrd) {
+        this.groupOrd = groupOrd;
+    }
+
+    public Integer getGroupLayer() {
+        return groupLayer;
+    }
+
+    public void setGroupLayer(Integer groupLayer) {
+        this.groupLayer = groupLayer;
+    }
+    public boolean isNotice() {
+        return isNotice;
+    }
+
+    public void setIsNotice(boolean notice) {
+        this.isNotice = notice;
+    }
     public String getTitle() {
         return title;
     }

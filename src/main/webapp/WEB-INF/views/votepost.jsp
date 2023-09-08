@@ -163,7 +163,7 @@
                                         data: {
                                             labels: optionData,
                                             datasets: [{
-                                                label: '투표 옵션',
+                                                label: '득표',
                                                 data: new Array(optionData.length).fill(0),
                                                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -171,12 +171,13 @@
                                             }]
                                         },
                                         options: {
-                                            scales: {
-                                                y: {
-                                                    beginAtZero: true,
-                                                    stepSize: 1, // 이 부분을 1로 설정하여 1의 단위로 스케일링
-                                                }
-                                            }
+                                        plugins:{
+                                                        legend: {
+                                                            display: false
+                                                        },
+                                                    },
+                                        indexAxis: 'y' ,
+
                                         }
                                     });
 
@@ -194,7 +195,7 @@
                                             xhr.onreadystatechange = function () {
                                                 if (xhr.readyState === 4 && xhr.status === 200) {
                                                     // 투표 결과 출력
-                                                    document.getElementById("voteResult").innerHTML = "투표 결과: " + xhr.responseText;
+                                                    document.getElementById("voteResult").innerHTML = "총 투표 수 : " + xhr.responseText;
 
                                                     // 옵션 득표 수 가져오기
                                                     var voteCountsXHR = new XMLHttpRequest();

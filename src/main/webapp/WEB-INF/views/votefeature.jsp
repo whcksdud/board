@@ -39,7 +39,9 @@
             Class.forName("org.h2.Driver");
             Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
             Statement stmt = conn.createStatement();
-            String query = "SELECT * FROM VOTE "; // 데이터를 가져올 쿼리문
+
+            // 게시글 목록 가져오기
+            String query = "SELECT * FROM VOTE";
             ResultSet rs = stmt.executeQuery(query);
     %>
     <div class="container-xxl bg-white p-0">
@@ -70,8 +72,7 @@
                             <div class="dropdown-menu m-0">
                                 <a href="feature" class="dropdown-item">게시판</a>
                                 <a href="votefeature" class="dropdown-item active">투표</a>
-                                                                <a href="game" class="dropdown-item">게임</a>
-
+                                <a href="game" class="dropdown-item">게임</a>
                             </div>
                         </div>
                     </div>
@@ -91,44 +92,42 @@
         <!-- Features Start -->
         <div class="container-xxl py-6">
             <div class="container">
-                    <!-- Sample Posts -->
-                  <div class="container mt-5">
-                      <div class="container">
+                <!-- Sample Posts -->
+                <div class="container mt-5">
+                    <div class="container">
+                        <div class="row">
+                            <% while (rs.next()) { %>
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><a href="/votepost?ID=<%= rs.getString("ID") %>"><%= rs.getString("TITLE") %></a></h5>
+                                        <p class="card-text">작성번호: <%= rs.getString("ID") %></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }
 
+                            rs.close();
+                            stmt.close();
+                            conn.close();
+                            } catch (Exception e) {
+                                out.println("데이터베이스 조회 도중 오류가 발생하였습니다: " + e.getMessage());
+                            }
+                            %>
+                        </div>
+                    </div>
+                </div>
 
-                          <table class="table">
-                              <thead>
-                                  <tr>
-                                      <th scope="col">번호</th>
-                                      <th scope="col">제목</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <% while (rs.next()) { %>
-                                  <tr>
-                                      <th scope="row"><%= rs.getString("ID") %></th>
-                                      <td><a href="/votepost?ID=<%= rs.getString("ID") %>"><%= rs.getString("TITLE") %></a></td>
-                                  </tr>
+                <br>
+                <br>
+                <br>
+                <div class="text-center">
+                                              <button type="button" class="btn btn-primary" onClick="location.href='voteadd'">
+                                                                      <i class="bi bi-check-circle"></i> 투표 생성
+                                                                  </button>
+                                          </div>
+              </div>
 
-                                  <% }
-                                  rs.close();
-                                  stmt.close();
-                                  conn.close();
-                                  } catch (Exception e) {
-                                      out.println("데이터베이스 조회 도중 오류가 발생하였습니다: " + e.getMessage());
-                                  }
-                                  %>
-                              </tbody>
-                          </table>
-
-                          <button type="button" class="btn btn-primary" onClick="location.href='voteadd'">
-                            <i class="bi bi-check-circle"></i> 투표생성
-                          </button>
-                      </div>
-
-                  </div>
-
-            </div>
         </div>
         <!-- Features End -->
 
@@ -140,24 +139,24 @@
             </div>
 
         </div>
-        </div>
-        <!-- Footer End -->
-
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
+    <!-- Footer End -->
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/wow/wow.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="lib/wow/wow.min.js"></script>
+<script src="lib/easing/easing.min.js"></script>
+<script src="lib/waypoints/waypoints.min.js"></script>
+<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
 </body>
 
 </html>

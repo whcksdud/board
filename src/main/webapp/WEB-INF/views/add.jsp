@@ -64,25 +64,40 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-lg-7 wow fadeInUp" data-wow-delay="0.3s">
-           
-                        <form method="post" action="BoardServlet" class="needs-validation" novalidate>
 
+                        <form method="post" action="BoardServlet" class="needs-validation" novalidate>
                             <div class="form-group row">
-                                <label for="title" class="col-sm-2 col-form-label">제목 *</label>
+                                <label class="col-sm-2 col-form-label">공지 여부 </label>
+                                <br>
+                                <br>
+
+                                <div class="col-sm-10">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="isNotice" id="yesNotice" value="true" required>
+                                        <label class="form-check-label" for="yesNotice">예</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="isNotice" id="noNotice" value="false" required>
+                                        <label class="form-check-label" for="noNotice">아니오</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="title" class="col-sm-2 col-form-label">제목 </label>
                                 <div class="col-sm-10">
                                     <input type="text" name="title" class="form-control" required>
                                 </div>
                             </div>
                             <br>
                             <div class="form-group row">
-                                <label for="name" class="col-sm-2 col-form-label">아이디 *</label>
+                                <label for="name" class="col-sm-2 col-form-label">아이디 </label>
                                 <div class="col-sm-10">
                                     <input type="text" name="id" class="form-control" required>
                                 </div>
                             </div>
                             <br>
                             <div class="form-group row">
-                                <label for="pass" class="col-sm-2 col-form-label">비밀번호 *</label>
+                                <label for="pass" class="col-sm-2 col-form-label">비밀번호 </label>
                                 <div class="col-sm-10">
                                     <input type="password" name="pw" class="form-control" required>
                                 </div>
@@ -100,9 +115,7 @@
                                <div class="form-group row">
                                                                             <div class="col-sm-10 offset-sm-2">
                                                                                 <!-- 투표 버튼 -->
-                                                                                <button class="btn btn-outline-primary vote-button" data-postid="게시글ID" data-vote="yes">
-                                                                                    <i class="bi bi-check-circle"></i> 투표
-                                                                                </button>
+
 
                                                                                 <!-- 사진 아이콘 버튼 -->
                                                                                 <button class="btn btn-outline-primary ml-2">
@@ -112,6 +125,7 @@
                                                                             </div>
                                                                         </div>
                             <br>
+
                             <div class="form-group row">
                                 <div class="col-sm-10 offset-sm-2">
                                     <button type="submit" class="btn btn-primary">등록</button>

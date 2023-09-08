@@ -101,6 +101,9 @@
                                         %>
                         </div>
                         <div class="col-sm-10 offset-sm-2" align="right">
+                                                                            <button type="button" class="btn btn-success ml-2 reply-button" data-bs-toggle="modal" data-bs-target="#replyModal">
+                                                                                    <i class="bi bi-reply"></i> 답글
+                                                                                </button>
                                                                             <!-- 수정 버튼 -->
                                                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
                                                                                 <i class="bi bi-pencil"></i> 수정
@@ -136,6 +139,43 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
+                                                                            <!-- 답글 모달 -->
+                                                                            <div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+                                                                                <div class="modal-dialog">
+                                                                                    <div class="modal-content">
+                                                                                        <div class="modal-header">
+                                                                                            <h5 class="modal-title" id="replyModalLabel">답글 작성</h5>
+                                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                        </div>
+                                                                                        <div class="modal-body">
+                                                                                            <!-- 답글 작성 폼 -->
+                                                                                            <form id="replyForm" method="post" action="SaveReplyServlet">
+                                                                                                <!-- 게시글 번호를 전달하기 위한 hidden input -->
+                                                                                                <input type="hidden" id="postNum" name="postNum" value="<%= num %>">
+
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="replyTitle" class="form-label">답글 제목</label>
+                                                                                                    <input type="text" class="form-control" id="replyTitle" name="replyTitle" required>
+                                                                                                </div>
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="replyId" class="form-label">작성자 아이디</label>
+                                                                                                    <input type="text" class="form-control" id="replyId" name="replyId" required>
+                                                                                                </div>
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="replyPw" class="form-label">비밀번호</label>
+                                                                                                    <input type="password" class="form-control" id="replyPw" name="replyPw" required>
+                                                                                                </div>
+                                                                                                <div class="mb-3">
+                                                                                                    <label for="replyContent" class="form-label">답글 내용</label>
+                                                                                                    <textarea class="form-control" id="replyContent" name="replyContent" rows="5" required></textarea>
+                                                                                                </div>
+                                                                                                <button type="submit" class="btn btn-primary">답글 작성 완료</button>
+                                                                                            </form>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
 
                                                                             <!-- 삭제 버튼 -->
                                                                                 <button type="button" class="btn btn-danger ml-2 delete-button" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
@@ -202,7 +242,6 @@
                                         </div>
                                         <button type="submit" class="btn btn-primary">댓글 작성</button>
                                     </form>
-
                                     <div class="comment">
                                         <%
                                         try {
