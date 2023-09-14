@@ -46,6 +46,7 @@ spring.jpa.hibernate.ddl-auto=create
 #실시간수정
 server.servlet.jsp.init-parameters.development=true 
 
+# 경로설정
 spring.mvc.view.prefix=/WEB-INF/views/
 spring.mvc.view.suffix=.jsp
 ```
