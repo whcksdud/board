@@ -43,9 +43,8 @@ spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.properties.hibernate.show_sql=true
 spring.jpa.hibernate.ddl-auto=create
 
-#??? ??
+#실시간수정
 server.servlet.jsp.init-parameters.development=true 
-
 
 spring.mvc.view.prefix=/WEB-INF/views/
 spring.mvc.view.suffix=.jsp
@@ -53,7 +52,7 @@ spring.mvc.view.suffix=.jsp
 
 
 🐔 Languages & IDE
-SPIRNGBOOT : 3.1.3
-DB : H2 db
+- SPIRNGBOOT : 3.1.3
+- DB : H2 db
 
 
