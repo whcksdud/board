@@ -4,8 +4,7 @@
 
 ⚡ Key Features
 - 게시판 CRUD 기능
-
-![image](https://github.com/whcksdud/board/assets/67512185/f61d4307-8a15-4a09-b593-bdab1459f592)
+- ![image](https://github.com/whcksdud/board/assets/67512185/f61d4307-8a15-4a09-b593-bdab1459f592)
 
 - 공지글 기능
 ![image](https://github.com/whcksdud/board/assets/67512185/f4d2746b-a7b8-44bd-9d95-4f75d5ff2a19)
