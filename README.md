@@ -24,6 +24,81 @@
 - 웹 게임 기능
 - ![image](https://github.com/whcksdud/board/assets/67512185/b6919678-8348-43db-b617-f374fb5f83de)
 
+🎨 Structure
+```
+├─.gradle
+│  ├─8.2.1
+│  │  ├─checksums
+│  │  ├─dependencies-accessors   
+│  │  ├─executionHistory
+│  │  ├─fileChanges
+│  │  ├─fileHashes
+│  │  └─vcsMetadata
+│  ├─buildOutputCleanup
+│  └─vcs-1
+├─.idea
+├─build
+│  ├─classes
+│  │  └─java
+│  │      └─main
+│  │          └─com
+│  │              └─example
+│  │                  └─demo
+│  │                      ├─controller
+│  │                      ├─dao
+│  │                      └─domain
+│  ├─generated
+│  │  └─sources
+│  │      ├─annotationProcessor
+│  │      │  └─java
+│  │      │      └─main
+│  │      └─headers
+│  │          └─java
+│  │              └─main
+│  ├─resources
+│  │  └─main
+│  │      ├─static
+│  │      │  ├─css
+│  │      │  ├─img
+│  │      │  ├─js
+│  │      │  ├─lib
+│  │      │  │  ├─animate
+│  │      │  │  ├─easing
+│  │      │  │  ├─owlcarousel
+│  │      │  │  │  └─assets
+│  │      │  │  ├─waypoints
+│  │      │  │  └─wow
+│  │      │  └─scss
+│  │      │      └─bootstrap
+│  │      │          └─scss
+│  │      │              ├─forms
+│  │      │              ├─helpers
+│  │      │              ├─mixins
+│  │      │              ├─utilities
+│  │      │              └─vendor
+│  │      └─templates
+│  └─tmp
+│      └─compileJava
+│          └─compileTransaction
+│              ├─backup-dir
+│              └─stash-dir
+├─gradle
+│  └─wrapper
+    │  │  │              ├─helpers
+    │  │  │              ├─mixins
+    │  │  │              ├─utilities
+    │  │  │              └─vendor
+    │  │  └─templates
+    │  └─webapp
+    │      └─WEB-INF
+    │          └─views
+    └─test
+        └─java
+            └─com
+                └─example
+                    └─demo
+
+```
 👊 Dependence
 ```
 #h2 console
