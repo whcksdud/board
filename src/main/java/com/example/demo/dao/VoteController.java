@@ -17,10 +17,10 @@ public class VoteController {
 
     @PostMapping("/vote")
     @ResponseBody
-    public String vote(@RequestParam("num") String num, @RequestParam("optionId") String optionId) {
+    public String vote(@RequestParam("num") String num, @RequestParam("optionId") String optionText) {
         try {
             // num과 optionId를 사용하여 해당 투표 항목의 votecount 증가 처리
-            voteService.vote(Long.parseLong(num), Long.parseLong(optionId));
+            voteService.vote(Long.parseLong(num), Long.parseLong(optionText));
             int totalVotes = voteService.getTotalVotes(Long.parseLong(num));
             return String.valueOf(totalVotes);
         } catch (Exception e) {

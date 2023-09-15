@@ -53,4 +53,5 @@ public class CommentDTO {
     public void setCommentContent(String commentContent) {
         this.commentContent = commentContent;
     }
+
 }

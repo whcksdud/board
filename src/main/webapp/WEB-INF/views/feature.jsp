@@ -1,5 +1,12 @@
 <%@ page import="java.util.*, java.sql.*" %>
+<%@ page import="com.example.demo.dao.BoardDAO" %>
+<%@ page import="com.example.demo.domain.BoardDTO" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+
+<%
+  BoardDAO boardDAO = new BoardDAO();
+  List<BoardDTO> posts = boardDAO.getAllPosts();
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,7 +22,7 @@
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
@@ -34,15 +41,7 @@
 </head>
 
 <body>
-    <%
-        try {
-            Class.forName("org.h2.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
-            Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            String query = "SELECT * FROM BOARD ORDER BY is_notice DESC,  ORIGIN_NO ASC, num ASC"; // 데이터를 가져올 쿼리문
-            ResultSet rs = stmt.executeQuery(query);
-    %>
     <div class="container-xxl bg-white p-0">
         <!-- Spinner Start -->
         <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -88,7 +87,6 @@
         </div>
         <!-- Navbar & Hero End -->
 
-
         <!-- Features Start -->
         <div class="container-xxl py-6">
             <div class="container">
@@ -96,15 +94,14 @@
                   <div class="container mt-5">
                       <div class="container">
                           <%
-                          String searchKeyword = request.getParameter("searchKeyword");
-                          if (searchKeyword != null) {
-                              searchKeyword = searchKeyword.trim();
-                              if (!searchKeyword.isEmpty()) {
-                                  String searchQuery = "SELECT * FROM BOARD WHERE title LIKE ?";
-                                  try (PreparedStatement pstmt = conn.prepareStatement(searchQuery)) {
-                                      pstmt.setString(1, "%" + searchKeyword + "%");
-                                      ResultSet searchResult = pstmt.executeQuery();
-                                      if (searchResult.next()) { // 검색 결과가 있을 때만 테이블 표시
+                            String searchKeyword = request.getParameter("searchKeyword");
+                              List<BoardDTO> searchPosts = boardDAO.searchPosts(searchKeyword);
+                            if (searchKeyword != null) {
+                                        for (BoardDTO searchPost : searchPosts){
+                                                      String snum = String.valueOf(searchPost.getNum());
+                                                      String stitle = searchPost.getTitle();
+                                                      String sid = searchPost.getId();
+                                                      String swriterDate = searchPost.getWriterDate().toString();
                           %>
                           <h4 class="mt-4">검색 결과</h4>
                           <table class="table">
@@ -117,28 +114,17 @@
                                   </tr>
                               </thead>
                               <tbody>
-                                  <% do { %>
-                                  <tr>
-                                      <th scope="row"><%= searchResult.getString("num") %></th>
-                                      <td><a href="/post?num=<%= searchResult.getString("num") %>"><%= searchResult.getString("title") %></a></td>
-                                      <td><%= searchResult.getString("id") %></td>
-                                      <td><%= searchResult.getString("writer_date") %></td>
+                                    <tr>
+                                      <th scope="row"><%= snum %></th>
+                                      <td><a href="/post?num=<%= snum %>"><%= stitle %></a></td>
+                                      <td><%= sid %></td>
+                                      <td><%= swriterDate %></td>
                                   </tr>
-                                  <% } while (searchResult.next()); %>
                               </tbody>
                           </table>
+                          <%}}%>
                           <h4 class="mt-4">전체 게시글</h4>
-                          <%
-                                      } else {
-                                          out.println("<h3>검색 결과가 없습니다.</h3>");
-                                      }
-                                      searchResult.close();
-                                  } catch (SQLException e) {
-                                      out.println("검색 도중 오류가 발생하였습니다: " + e.getMessage());
-                                  }
-                              }
-                          }
-                          %>
+
 
                           <table class="table">
                               <thead>
@@ -150,14 +136,15 @@
                                   </tr>
                               </thead>
                               <tbody>
+
                                   <%
-                                  while (rs.next()) {
-                                      String num = rs.getString("num");
-                                      String title = rs.getString("title");
-                                      String id = rs.getString("id");
-                                      String writerDate = rs.getString("writer_date");
-                                      boolean isNotice = rs.getBoolean("is_notice");
-                                      int groupLayer = rs.getInt("group_Layer"); // 이 위치에서 groupLayer 정의
+                                  for (BoardDTO post : posts)  {
+                                  String num = String.valueOf(post.getNum());
+                                                      String title = post.getTitle();
+                                                      String id = post.getId();
+                                                      String writerDate = post.getWriterDate().toString();
+                                                      boolean isNotice = post.getisNotice();
+                                                      int groupLayer = post.getGroupLayer();
 
                                       if (isNotice) { %>
                                           <tr>
@@ -184,12 +171,7 @@
                                           <% }
                                       }
                                   }
-                                  rs.close();
-                                  stmt.close();
-                                  conn.close();
-                                  } catch (Exception e) {
-                                      out.println("데이터베이스 조회 도중 오류가 발생하였습니다: " + e.getMessage());
-                                  }
+
                                   %>
                               </tbody>
                           </table>

@@ -1,4 +1,5 @@
 <%@ page import="java.util.*, java.sql.*" %>
+<%@ page import="com.example.demo.dao.VoteDAO" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,7 +51,6 @@
             <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
                 <a href="/home" class="navbar-brand p-0">
                     <h1 class="m-0">게시판 플젝</h1>
-                    <!-- <img src="img/logo.png" alt="Logo"> -->
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars"></span>
@@ -63,8 +63,7 @@
                             <div class="dropdown-menu m-0">
                                 <a href="feature" class="dropdown-item">게시판</a>
                                 <a href="votefeature" class="dropdown-item active">투표</a>
-                                                                <a href="game" class="dropdown-item">게임</a>
-
+                                <a href="game" class="dropdown-item">게임</a>
                             </div>
                         </div>
                     </div>
@@ -76,187 +75,152 @@
                     <h1 class="text-white animated zoomIn mb-3">게시판</h1>
                 </div>
             </div>
-
         </div>
 
-        <!-- Navbar & Hero End -->
         <!-- Features Start -->
-
         <div class="container-xxl py-6">
-            <div class="container text-center"> <!-- text-center 추가 -->
-                <!-- Sample Posts -->
-                 <div class="container mt-5">
-                            <div class="mt-5">
-                                <%
-                                    String num = request.getParameter("ID");
-                                    ArrayList<String> optionTexts = new ArrayList<>();
+            <div class="container text-center">
+                <div class="container mt-5">
+                    <div class="mt-5">
+                        <%
+                            String num = request.getParameter("ID");
+                            VoteDAO voteDAO = new VoteDAO();
+                            List<String> optionTexts = voteDAO.getVoteOptions(num);
 
-                                    try {
-                                        Class.forName("org.h2.Driver");
-                                        Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
-
-                                        Statement stmt = conn.createStatement();
-                                        String query = "SELECT * FROM VOTE WHERE ID = " + num;
-                                        ResultSet rs = stmt.executeQuery(query);
-
-                                        if (rs.next()) {
-                                %>
-                                <div class="col-sm-10 offset-sm-2 mx-auto">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4" style="text-align: center;"><%= rs.getString("title") %></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <%
-                                                Statement optionStmt = conn.createStatement();
-                                                String optionQuery = "SELECT * FROM VOTE_OPTION WHERE vote_id = " + num;
-                                                ResultSet optionRS = optionStmt.executeQuery(optionQuery);
-
-                                                while (optionRS.next()) {
-                                                    String optionText = optionRS.getString("OPTION_TEXT");
-                                                    optionTexts.add(optionText);
-                                                    int optionId = optionRS.getInt("id");
-                                            %>
-                                            <tr>
-                                                <td>
-                                                    <input class="form-check-input" type="radio" name="option" id="option<%= optionId %>" value="<%= optionId %>">
-                                                    <label class="form-check-label" for="option<%= optionId %>">
-                                                        <%= optionText %>
-                                                    </label>
-                                                </td>
-                                            </tr>
-                                            <%
-                                                }
-                                                optionRS.close();
-                                                optionStmt.close();
-                                            %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <%
+                            try {
+                                String title = voteDAO.getVoteTitle(num);
+                        %>
+                        <div class="col-sm-10 offset-sm-2 mx-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th colspan="4" style="text-align: center;"><%= title %></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for (String optionText : optionTexts) {
+                                    %>
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input" type="radio" name="option" id="option<%= optionText %>" value="<%= optionText %>">
+                                            <label class="form-check-label" for="option<%= optionText %>">
+                                                <%= optionText %>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <%
                                         }
-                                        rs.close();
-                                        stmt.close();
-                                        conn.close();
+                                    %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <%
+                            }
+                            catch (Exception e) {
+                                out.println("데이터베이스 조회 도중 오류가 발생하였습니다: " + e.getMessage());
+                            }
+                        %>
 
-                                    } catch (Exception e) {
-                                        out.println("데이터베이스 조회 도중 오류가 발생하였습니다: " + e.getMessage());
-                                    }
-                                %>
-
-                                <!-- 차트 표시 영역 추가 -->
-                                <div class="col-sm-10 offset-sm-2 mx-auto">
-                                    <canvas id="voteChart" width="400" height="200"></canvas>
-                                </div>
-
-                                <!-- 추가된 코드: 투표 버튼 -->
-                                <button id="voteButton" class="btn btn-primary">투표하기</button>
-                                <div id="voteResult" class="mt-3"></div>
-
-                                <script>
-                                    var optionData = <%= new org.json.JSONArray(optionTexts) %>;
-                                    var ctx = document.getElementById('voteChart').getContext('2d');
-                                    var chart = new Chart(ctx, {
-                                        type: 'bar',
-                                        data: {
-                                            labels: optionData,
-                                            datasets: [{
-                                                label: '득표',
-                                                data: new Array(optionData.length).fill(0),
-                                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                                borderColor: 'rgba(75, 192, 192, 1)',
-                                                borderWidth: 1
-                                            }]
-                                        },
-                                        options: {
-                                        plugins:{
-                                                        legend: {
-                                                            display: false
-                                                        },
-                                                    },
-                                        indexAxis: 'y' ,
-
-                                        }
-                                    });
-
-
-                                    document.getElementById("voteButton").addEventListener("click", function () {
-                                        var selectedOption = document.querySelector('input[name="option"]:checked');
-
-                                        if (selectedOption) {
-                                            var optionId = selectedOption.value;
-                                            var num = '<%= num %>';
-
-                                            var xhr = new XMLHttpRequest();
-                                            xhr.open("POST", "/vote", true);
-                                            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                                            xhr.onreadystatechange = function () {
-                                                if (xhr.readyState === 4 && xhr.status === 200) {
-                                                    // 투표 결과 출력
-                                                    document.getElementById("voteResult").innerHTML = "총 투표 수 : " + xhr.responseText;
-
-                                                    // 옵션 득표 수 가져오기
-                                                    var voteCountsXHR = new XMLHttpRequest();
-                                                    voteCountsXHR.open("GET", "/getVoteCounts?num=" + num, true);
-                                                    voteCountsXHR.onreadystatechange = function () {
-                                                        if (voteCountsXHR.readyState === 4 && voteCountsXHR.status === 200) {
-                                                            var voteCounts = JSON.parse(voteCountsXHR.responseText);
-
-                                                            // 차트 데이터 업데이트
-                                                            chart.data.datasets[0].data = voteCounts;
-
-                                                            // 차트 다시 그리기
-                                                            chart.update();
-                                                        }
-                                                    };
-                                                    voteCountsXHR.send();
-                                                }
-                                            };
-                                            xhr.send("num=" + num + "&optionId=" + optionId);
-                                        } else {
-                                            alert("투표 옵션을 선택하세요.");
-                                        }
-                                    });
-
-                                </script>
-                            </div>
+                        <!-- 차트 표시 영역 추가 -->
+                        <div class="col-sm-10 offset-sm-2 mx-auto">
+                            <canvas id="voteChart" width="400" height="200"></canvas>
                         </div>
 
+                        <!-- 추가된 코드: 투표 버튼 -->
+                        <button id="voteButton" class="btn btn-primary">투표하기</button>
+                        <div id="voteResult" class="mt-3"></div>
+
+                        <script>
+                            var optionData = <%= new org.json.JSONArray(optionTexts) %>;
+                            var ctx = document.getElementById('voteChart').getContext('2d');
+                            var chart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: optionData,
+                                    datasets: [{
+                                        label: '득표',
+                                        data: new Array(optionData.length).fill(0),
+                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    plugins:{
+                                        legend: {
+                                            display: false
+                                        },
+                                    },
+                                    indexAxis: 'y',
+                                }
+                            });
+
+                            document.getElementById("voteButton").addEventListener("click", function () {
+                                var selectedOption = document.querySelector('input[name="option"]:checked');
+
+                                if (selectedOption) {
+                                    var optionText = selectedOption.value;
+                                    var num = '<%= num %>';
+
+                                    var xhr = new XMLHttpRequest();
+                                    xhr.open("POST", "/vote", true);
+                                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                    xhr.onreadystatechange = function () {
+                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                            // 투표 결과 출력
+                                            document.getElementById("voteResult").innerHTML = "총 투표 수 : " + xhr.responseText;
+
+                                            // 옵션 득표 수 가져오기
+                                            var voteCountsXHR = new XMLHttpRequest();
+                                            voteCountsXHR.open("GET", "/getVoteCounts?num=" + num, true);
+                                            voteCountsXHR.onreadystatechange = function () {
+                                                if (voteCountsXHR.readyState === 4 && voteCountsXHR.status === 200) {
+                                                    var voteCounts = JSON.parse(voteCountsXHR.responseText);
+
+                                                    // 차트 데이터 업데이트
+                                                    chart.data.datasets[0].data = voteCounts;
+
+                                                    // 차트 다시 그리기
+                                                    chart.update();
+                                                }
+                                            };
+                                            voteCountsXHR.send();
+                                        }
+                                    };
+                                    xhr.send("num=" + num + "&optionId=" + optionText);
+                                } else {
+                                    alert("투표 옵션을 선택하세요.");
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Features End -->
-
-        <!-- Features End -->
-
 
         <!-- Footer Start -->
         <div class="container-fluid bg-dark text-light footer pt-5 wow fadeIn" data-wow-delay="0.1s" style="margin-top: 6rem;">
             <div class="container py-2">
-                        <p><i class="bi bi-shield-lock-fill"></i> copyright chanyougjo</p>
+                <p><i class="bi bi-shield-lock-fill"></i> copyright chanyougjo</p>
             </div>
-
         </div>
-        </div>
-        <!-- Footer End -->
-
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/wow/wow.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
 
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="lib/wow/wow.min.js"></script>
+<script src="lib/easing/easing.min.js"></script>
+<script src="lib/waypoints/waypoints.min.js"></script>
+<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
 </body>
 
 </html>

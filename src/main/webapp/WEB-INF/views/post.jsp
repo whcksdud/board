@@ -1,4 +1,9 @@
 <%@ page import="java.util.*, java.sql.*" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="com.example.demo.dao.BoardDAO" %>
+<%@ page import="com.example.demo.dao.CommentDAO" %>
+<%@ page import="com.example.demo.domain.CommentDTO" %>
+<%@ page import="com.example.demo.domain.BoardDTO" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -86,19 +91,15 @@
                     <div class="container mt-5">
 
                         <div class="mt-5">
-                                        <%
-                                              String num = request.getParameter("num");
+                                       <%
+                                       String num = request.getParameter("num");
 
-                                              try {
-                                                  Class.forName("org.h2.Driver");
-                                                  Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
 
-                                                  Statement stmt = conn.createStatement();
-                                                  String query = "SELECT * FROM BOARD WHERE num = " + num; // 해당 게시글의 데이터를 가져올 쿼리문
-                                                  ResultSet rs = stmt.executeQuery(query);
+                                           BoardDAO boardDAO = new BoardDAO(); // BoardDAO 클래스의 인스턴스 생성
+                                           BoardDTO board = boardDAO.getPostByNum(Integer.parseInt(num)); // getPostByNum 메서드 호출
 
-                                                  if (rs.next()) {
-                                        %>
+                                           if (board != null) {
+                                       %>
                         </div>
                         <div class="col-sm-10 offset-sm-2" align="right">
                                                                             <button type="button" class="btn btn-success ml-2 reply-button" data-bs-toggle="modal" data-bs-target="#replyModal">
@@ -127,11 +128,11 @@
                                                                                                 </div>
                                                                                                 <div class="mb-3">
                                                                                                     <label for="editTitle" class="form-label">제목</label>
-                                                                                                    <input type="text" class="form-control" id="editTitle" name="editTitle" value="<%= rs.getString("title") %>" required>
+                                                                                                    <input type="text" class="form-control" id="editTitle" name="editTitle" value="<%= board.getTitle() %>" required>
                                                                                                 </div>
                                                                                                 <div class="mb-3">
                                                                                                     <label for="editContext" class="form-label">내용</label>
-                                                                                                    <textarea class="form-control" id="editContext" name="editContext" rows="5" required><%= rs.getString("context") %></textarea>
+                                                                                                    <textarea class="form-control" id="editContext" name="editContext" rows="5" required><%= board.getContext() %></textarea>
                                                                                                 </div>
                                                                                                 <button type="submit" class="btn btn-primary">수정 완료</button>
                                                                                             </form>
@@ -205,31 +206,25 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th colspan="4" style="text-align: center;"><%= rs.getString("title") %></th>
+                                    <th colspan="4" style="text-align: center;"><%= board.getTitle() %></th>
                                 </tr>
                             </thead>
                             <tbody>
 
                                 <tr>
                                     <th style="text-align: center;">작성자</th>
-                                    <td><%= rs.getString("id") %></td>
+                                    <td><%= board.getId() %></td>
                                     <th style="text-align: center;">작성일</th>
-                                    <td><%= rs.getString("writer_date") %></td>
+                                    <td><%= board.getWriterDate() %></td>
                                 </tr>
                                 <td colspan="4" style="padding: 30px;">
-                                    <%= rs.getString("context") %>
+                                    <%= board.getContext() %>
                                 </td>
                                 <%
                                               } else {
                                                   out.println("게시글을 찾을 수 없습니다.");
                                               }
-                                              rs.close();
-                                              stmt.close();
-                                              conn.close();
 
-                                          } catch (Exception e) {
-                                              out.println("데이터베이스 조회 도중 오류가 발생하였습니다: " + e.getMessage());
-                                          }
                                     %>
                             </tbody>
 
@@ -244,18 +239,16 @@
                                     </form>
                                     <div class="comment">
                                         <%
-                                        try {
-                                            Class.forName("org.h2.Driver");
-                                            Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
 
-                                            Statement stmt = conn.createStatement();
-                                            String commentQuery = "SELECT * FROM COMMENT WHERE boardid = " + num; // 해당 게시글의 댓글 데이터를 가져올 쿼리문
-                                            ResultSet commentRS = stmt.executeQuery(commentQuery);
+                                            CommentDAO commentDAO = new CommentDAO();
+                                               Integer boardId = Integer.parseInt(num); // 문자열 num을 Integer로 변환
+                                               List<CommentDTO> comments = commentDAO.getCommentsByBoardId(boardId);
+                                            for (CommentDTO comment : comments) {
+                                                Date writeDate = comment.getWriteDate(); // 댓글 작성일
+                                                String content = comment.getCommentContent(); // 댓글 내용
+                                                long comnum = comment.getNum();
 
-                                            while (commentRS.next()) {
-                                                Timestamp writeDate = commentRS.getTimestamp("WRITE_DATE"); // 댓글 작성일
-                                                String content = commentRS.getString("COMMENT_CONTENT"); // 댓글 내용
-                                                String comnum = commentRS.getString("NUM"); // 댓글 내용
+
                                         %>
                                         <div class="comment-header" style="padding-top: 10px;">
                                             <strong style="padding-right: 5px;">익명<%= comnum %></strong>
@@ -267,14 +260,10 @@
                                         </div>
                                         <%
                                             }
-                                            commentRS.close();
-                                            stmt.close();
-                                            conn.close();
-                                        } catch (Exception e) {
-                                            out.println("데이터베이스 조회 도중 오류가 발생하였습니다: " + e.getMessage());
-                                        }
+
                                         %>
                                     </div>
+
                                     </div>
                     </div>
 

@@ -29,15 +29,13 @@ public class SaveCommentServlet extends HttpServlet {
                 comment.setCommentContent(commentContent);
                 comment.setBoardId(numStr);
 
-                Class.forName("org.h2.Driver");
-                Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
 
-                CommentDAO commentDAO = new CommentDAO(conn);
+                CommentDAO commentDAO = new CommentDAO();
 
                 // Insert the comment
                 boolean success = commentDAO.insertCommentBoard(comment);
 
-                conn.close();
+
 
                 if (success) {
                     response.sendRedirect("post?num=" + numStr); // Redirect back to the view page

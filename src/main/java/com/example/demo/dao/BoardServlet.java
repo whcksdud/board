@@ -36,16 +36,10 @@ public class BoardServlet extends HttpServlet {
 
 
         try {
-                Class.forName("org.h2.Driver");
-                Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
-
-                BoardDAO boardDAO = new BoardDAO(conn);
+                BoardDAO boardDAO = new BoardDAO();
                 boardDAO.insertBoard(boardDTO);
-
-                conn.close();
-
                 response.sendRedirect("/feature");
-            } catch (ClassNotFoundException | SQLException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println("실패");
             }

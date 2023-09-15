@@ -1,4 +1,6 @@
 <%@ page import="java.util.*, java.sql.*" %>
+<%@ page import="com.example.demo.dao.VoteDAO" %>
+<%@ page import="com.example.demo.domain.VoteDTO" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,14 +37,8 @@
 
 <body>
     <%
-        try {
-            Class.forName("org.h2.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
-            Statement stmt = conn.createStatement();
-
-            // 게시글 목록 가져오기
-            String query = "SELECT * FROM VOTE";
-            ResultSet rs = stmt.executeQuery(query);
+      VoteDAO voteDAO = new VoteDAO();
+      List<VoteDTO> voteList = voteDAO.getVoteList();
     %>
     <div class="container-xxl bg-white p-0">
         <!-- Spinner Start -->
@@ -96,24 +92,16 @@
                 <div class="container mt-5">
                     <div class="container">
                         <div class="row">
-                            <% while (rs.next()) { %>
-                            <div class="col-md-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><a href="/votepost?ID=<%= rs.getString("ID") %>"><%= rs.getString("TITLE") %></a></h5>
-                                        <p class="card-text">작성번호: <%= rs.getString("ID") %></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <% }
-
-                            rs.close();
-                            stmt.close();
-                            conn.close();
-                            } catch (Exception e) {
-                                out.println("데이터베이스 조회 도중 오류가 발생하였습니다: " + e.getMessage());
-                            }
-                            %>
+                           <% for (VoteDTO vote : voteList) { %>
+                                                       <div class="col-md-3">
+                                                           <div class="card">
+                                                               <div class="card-body">
+                                                                   <h5 class="card-title"><a href="/votepost?ID=<%= vote.getId() %>"><%= vote.getTitle() %></a></h5>
+                                                                   <p class="card-text">작성번호: <%= vote.getId() %></p>
+                                                               </div>
+                                                           </div>
+                                                       </div>
+                                                       <% } %>
                         </div>
                     </div>
                 </div>

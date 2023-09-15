@@ -59,7 +59,7 @@ public class BoardDTO {
     public void setGroupLayer(Integer groupLayer) {
         this.groupLayer = groupLayer;
     }
-    public boolean isNotice() {
+    public boolean getisNotice() {
         return isNotice;
     }
 
@@ -120,5 +120,9 @@ public class BoardDTO {
     }
     public Long getNum() {
         return num;
+    }
+
+    public void setNotice(boolean isNotice) {
+        this.isNotice = isNotice;
     }
 }
